@@ -18,7 +18,7 @@ Our team believes that there is an untapped market for smart home technology whi
 
 ## Method
 * Software
-    * Python 3
+    * Python 3.6
     * Linux
     * OpenCV, Hog, CNN
     * Linter
@@ -27,10 +27,19 @@ Our team believes that there is an untapped market for smart home technology whi
 
 How to connect via Windows and PuTTY:
    * Open PuTTY
-   * Under "Host Name (or IP address)", enter 155.246.215.92
+   * Under "Host Name (or IP address)", enter 155.246.215.123
    * A Linux Command Prompt will appear. Next to "login as", enter pi
-   * Next to "pi@155.246.215.92's password:", enter Stevens1870
+   * Next to "pi@155.246.215.123's password:", enter Stevens1870
    * You should be connected to the Pi. Enter linux commands as desired
    * To exit, enter sudo shutdown
    * Shutdown will be scheduled within the next minute. Do not exit until a PuTTY Fatal Error appears
 
+How to connect via Mac:
+   * Open terminal
+   * Enter "ssh pi@155.246.215.123"
+   * Enter "yes"
+   * Enter password: Stevens1870
+   * You should be connected to the Pi. Enter linux commands as desired
+   * To exit, enter sudo shutdown
+   * Shutdown will be scheduled within the next minute.
+   * Will receive message, "Connection to 155.246.215.123 closed by remote host. Connection to 155.246.215.123   closed.

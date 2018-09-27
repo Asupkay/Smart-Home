@@ -1,0 +1,56 @@
+import cv2
+import numpy as np
+import time
+
+# from medium article
+
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+
+# Create a VideoCapture object and read from input file
+# If the input is the camera, pass 0 instead of the video file name
+cap = cv2.VideoCapture('video1.h264')
+# cap = cv2.VideoCapture('TownCentreXVID.avi')  # another example video
+
+# Check if camera opened successfully
+if cap.isOpened() is False:
+    print("Error opening video stream or file")
+
+# Read until video is completed
+while cap.isOpened():
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+
+    if ret is True:
+        start_time = time.time()
+        frame = cv2.resize(frame, (1280, 720))  # Downscale to improve frame rate
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)  # HOG needs a grayscale image
+
+        rects, weights = hog.detectMultiScale(gray_frame)
+
+        # draw rectangles
+        for i, (x, y, w, h) in enumerate(rects):
+            if weights[i] < 0.7:
+                continue
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        # Display the resulting frame
+        cv2.imshow('Frame', frame)
+
+        # cropping box from frame
+        cropImg = frame[y: y + h, x: x + w]
+        cv2.imshow('cropImg', cropImg)
+
+        # Press Q on keyboard to exit
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            break
+
+    # Break the loop
+    else:
+        break
+
+# When everything done, release the video capture object
+cap.release()
+
+# Closes all the frames
+cv2.destroyAllWindows()

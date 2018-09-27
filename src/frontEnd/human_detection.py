@@ -16,41 +16,57 @@ cap = cv2.VideoCapture('video1.h264')
 if cap.isOpened() is False:
     print("Error opening video stream or file")
 
+start_time = time.time() #get start time of code execution
+
+#counter variable
+counter = -1
+#variable which says how many frames to skip
+frame_skip = 5
+
 # Read until video is completed
 while cap.isOpened():
-    # Capture frame-by-frame
-    ret, frame = cap.read()
 
-    if ret is True:
-        start_time = time.time()
-        frame = cv2.resize(frame, (1280, 720))  # Downscale to improve frame rate
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)  # HOG needs a grayscale image
+    counter += 1 #increment the counter for each loop
+    ret, frame = cap.read() #read the frame
+    if counter % frame_skip == 0: #if it is every nth frame, then detect humans in it, or just continue to next iteration
 
-        rects, weights = hog.detectMultiScale(gray_frame)
+        if ret is True: # if we are able to open the video
 
-        # draw rectangles
-        for i, (x, y, w, h) in enumerate(rects):
-            if weights[i] < 0.7:
-                continue
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            frame = cv2.resize(frame, (960, 540))  # Downscale to improve frame rate. Can adjust this value as needed
+            #Interestingly, it gives an error if I downscale it by half i.e 480x270 Try it out
+            gray_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)  # HOG needs a grayscale image. Convert frame from rgb to grayscale
+            rects, weights = hog.detectMultiScale(gray_frame) # actual detection of humans using HOG
 
-        # Display the resulting frame
-        cv2.imshow('Frame', frame)
+            # draw rectangles
+            for i, (x, y, w, h) in enumerate(rects):
+                if weights[i] < 20:
+                    continue
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-        # cropping box from frame
-        cropImg = frame[y: y + h, x: x + w]
-        cv2.imshow('cropImg', cropImg)
+            # Display the resulting frame
+            cv2.imshow('Frame', frame)
 
-        # Press Q on keyboard to exit
-        if cv2.waitKey(25) & 0xFF == ord('q'):
+            # cropping box from frame
+            cropImg = frame[y: y + h, x: x + w]
+            cv2.imshow('cropImg', cropImg)
+
+            # Press Q on keyboard to exit
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                break
+
+        # Break the loop
+        else:
             break
-
     # Break the loop
     else:
-        break
+        continue
+
+
 
 # When everything done, release the video capture object
 cap.release()
 
 # Closes all the frames
 cv2.destroyAllWindows()
+
+print("Execution time ---> %s seconds " % ((time.time() - start_time)))

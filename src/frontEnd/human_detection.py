@@ -47,6 +47,7 @@ while cap.isOpened():
                     # cropping box from frame
                     cropImg = frame[y: y + h, x: x + w]
                     cv2.imshow('cropImg', cropImg) #show cropped image in window
+                    cv2.imwrite("cropped" +str(i) + ".jpg", cropped)
 
             # Display the resulting frame
             cv2.imshow('Frame', frame)

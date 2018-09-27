@@ -35,20 +35,26 @@ while cap.isOpened():
             frame = cv2.resize(frame, (960, 540))  # Downscale to improve frame rate. Can adjust this value as needed
             #Interestingly, it gives an error if I downscale it by half i.e 480x270 Try it out
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)  # HOG needs a grayscale image. Convert frame from rgb to grayscale
-            rects, weights = hog.detectMultiScale(gray_frame) # actual detection of humans using HOG
+            rects, weights = hog.detectMultiScale(gray_frame, ) # actual detection of humans using HOG
+
 
             # draw rectangles
             for i, (x, y, w, h) in enumerate(rects):
-                if weights[i] < 20:
+
+                if weights[i] < 0.8:
                     continue
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                else:
+                    print(("Confidence value is {}".format(weights)))
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+                    # cropping box from frame
+                    cropImg = frame[y: y + h, x: x + w]
+                    cv2.imshow('cropImg', cropImg)
 
             # Display the resulting frame
             cv2.imshow('Frame', frame)
 
-            # cropping box from frame
-            cropImg = frame[y: y + h, x: x + w]
-            cv2.imshow('cropImg', cropImg)
+
 
             # Press Q on keyboard to exit
             if cv2.waitKey(25) & 0xFF == ord('q'):

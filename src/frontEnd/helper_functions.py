@@ -10,11 +10,13 @@ def convert_photo(link):
     return image_base64
 
 def send_image(image_base64):
-    url = "http://127.0.0.1"
+    url = "https://clamflelmo.com"
     data = image_base64
-    files = {"file": data}
+    files = {"photo": { "base64": data}}
 
     try:
-        r = requests.post(url, files=files)
+        r = requests.post(url, data=files)
     except requests.exceptions.RequestException as e:
         print(e)
+
+    print(r)

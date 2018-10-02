@@ -1,5 +1,6 @@
 import cv2
 import time
+from helper_functions import convert_photo, send_image
 
 # from medium article
 
@@ -52,6 +53,9 @@ while cap.isOpened():
             # Display the resulting frame
             cv2.imshow('Frame', frame)
 
+            # Save the image to the working directory
+            cv2.imwrite('person.jpg', frame)
+
             # Press Q on keyboard to exit
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
@@ -70,3 +74,8 @@ cap.release()
 cv2.destroyAllWindows()
 
 print("Execution time ---> %s seconds " % ((time.time() - start_time))) #print code execution time
+
+image_base64 = convert_photo('person.jpg')
+print(image_base64)
+
+send_image(image_base64)

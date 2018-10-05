@@ -22,6 +22,8 @@ Our team believes that there is an untapped market for smart home technology whi
     * Linux
     * OpenCV, Hog, CNN
     * Linter
+* Infrastructure
+    * App Engine (Standard Environment)
     
 ## Raspberry Pi Setup
 

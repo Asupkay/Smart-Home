@@ -24,6 +24,7 @@ Our team believes that there is an untapped market for smart home technology whi
     * Linter
 * Infrastructure
     * App Engine (Standard Environment)
+    * AutoML
     
 ## Raspberry Pi Setup
 

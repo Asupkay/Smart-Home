@@ -9,19 +9,24 @@ import json
 
 app = Flask(__name__)
 
+# Test Route
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
     return 'Hello, World!'
 
+# AutoML prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
+    # Grab the json body
     body = request.get_json()
+
+    # See if the image exists if it doesn't abort
     try:
         base64 = body['photo']['base64']
-        #return jsonify({'success': True, 'identification': { 'name':'Alex Supkay' }})
     except:
         abort(400)
 
+    # Get the current time and create a jwt token for the api
     iat = time.time()
     exp = iat + 3600
     payload = {'iss': 'automl@engineering-capstone.iam.gserviceaccount.com',
@@ -36,6 +41,7 @@ def predict():
     additional_headers = {'kid': PRIVATE_KEY_ID_FROM_JSON}
     signed_jwt = jwt.encode(payload, PRIVATE_KEY_FROM_JSON, headers = additional_headers, algorithm = 'RS256')
 
+    #Post to the model and return the response
     response = requests.post('https://automl.googleapis.com/v1beta1/projects/engineering-capstone/locations/us-central1/models/ICN2044687123149108018:predict', json = {'payload': {'image': { 'imageBytes': str(base64)}}}, headers={'Authorization':'Bearer ' + signed_jwt.decode("utf-8")})
     return response.text;
 

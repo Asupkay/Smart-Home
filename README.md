@@ -19,12 +19,15 @@ Our team believes that there is an untapped market for smart home technology whi
 ## Method
 * Software
     * Python 3.6
+    * Flask
+    * React
     * Linux
     * OpenCV, Hog, CNN
     * Linter
 * Infrastructure
     * App Engine (Standard Environment)
     * AutoML
+    * Firestore
     
 ## Raspberry Pi Setup
 

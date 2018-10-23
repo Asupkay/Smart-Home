@@ -1,4 +1,4 @@
-from flask import Flask, abort, jsonify
+from flask import Flask, abort, jsonify, send_from_directory
 from flask import request
 import requests
 import time
@@ -7,12 +7,19 @@ import jwt
 import sys
 import json
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder = 'react_app/build')
 
-# Test Route
-@app.route('/', methods=['GET', 'POST'])
-def hello_world():
-    return 'Hello, World!'
+@app.route('/')
+def serve_static_index():
+    return send_from_directory('react_app/build/', 'index.html')
+
+@app.route('/static/<path:path>') # serve whatever the client requested in the static folder
+def serve_static(path):
+    return send_from_directory('react_app/build/static/', path)
+
+@app.route('/service-worker.js')
+def serve_worker():
+    return send_from_directory('react_app/build/', 'service-worker.js')
 
 # AutoML prediction route
 @app.route('/predict', methods=['POST'])
@@ -45,3 +52,5 @@ def predict():
     response = requests.post('https://automl.googleapis.com/v1beta1/projects/engineering-capstone/locations/us-central1/models/ICN2044687123149108018:predict', json = {'payload': {'image': { 'imageBytes': str(base64)}}}, headers={'Authorization':'Bearer ' + signed_jwt.decode("utf-8")})
     return response.text;
 
+if __name__ == "__main__":
+    app.run()

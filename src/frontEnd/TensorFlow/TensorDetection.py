@@ -62,39 +62,46 @@ class DetectorAPI:
 
 if __name__ == "__main__":
 
-    model_path = '/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/ssd_mobilenet_v1_ppn_shared_box_predictor_300x300_coco14_sync_2018_07_03/frozen_inference_graph.pb'
+    #4seconds per img
+    model_path = '/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/faster_rcnn_inception_v2_coco_2018_01_28/frozen_inference_graph.pb'
+    #model_path = '/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/faster_rcnn_nas_coco_2018_01_28/frozen_inference_graph.pb'
     odapi = DetectorAPI(path_to_ckpt=model_path)
     threshold = 0.7
     start_time2 = time.time()
-    cap = cv2.VideoCapture('/Users/franklin/PycharmProjects/peopleDetection/3.h264')
-    counter = 0
-    frameskip = 20
-    while True:
-        counter += 1
-        if not counter % frameskip == 0:
-            continue
-        r, img = cap.read()
-        if r is True:
-            img = cv2.resize(img, (960, 540))
 
-            boxes, scores, classes, num = odapi.processFrame(img)
+    #read every pic in the folder
+    for img in os.listdir('/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/test'):
+        cap = cv2.VideoCapture('/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/test/' + img)
+    #cap = cv2.VideoCapture('/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/picture1539734811.83.jpg')
+        # counter = 0
+        # frameskip = 20
+        while True:
+            # counter += 1
+            # if not counter % frameskip == 0:
+            #     continue
+            r, img = cap.read()
+            if r is True:
+                img = cv2.resize(img, (960, 540))
 
-            # Visualization of the results of a detection.
+                boxes, scores, classes, num = odapi.processFrame(img)
 
-            for i in range(len(boxes)):
-                # Class 1 represents human
-                if classes[i] == 1 and scores[i] > threshold:
-                    box = boxes[i]
-                    cropImg = img[box[0]: box[2], box[1]: box[3]]
-                    cv2.rectangle(img,(box[1],box[0]),(box[3],box[2]),(255,0,0),2)
-                    cv2.imwrite(os.curdir + '/box/' + 'person' + str(time.time()) + '.jpg', cropImg) #save image in the box.
-            cv2.imshow("preview", img)
+                # Visualization of the results of a detection.
 
-            key = cv2.waitKey(1)
-            if key & 0xFF == ord('q'):
+                for i in range(len(boxes)):
+                    # Class 1 represents human
+                    if classes[i] == 1 and scores[i] > threshold:
+                        box = boxes[i]
+                        cropImg = img[box[0]: box[2], box[1]: box[3]]
+                        cv2.rectangle(img,(box[1],box[0]),(box[3],box[2]),(255,0,0),2)
+                        # save image in the box.
+                        cv2.imwrite(os.curdir + '/box/' + 'person' + str(time.time()) + '.jpg', cropImg)
+                cv2.imshow("preview", img)
+
+                key = cv2.waitKey(1)
+                if key & 0xFF == ord('q'):
+                    break
+            else:
                 break
-        else:
-            break
 
     end_time2 = time.time()
     print("Elapsed Time total:", end_time2 - start_time2)

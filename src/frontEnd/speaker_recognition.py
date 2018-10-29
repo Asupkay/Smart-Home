@@ -3,6 +3,7 @@ from time import ctime
 import time
 import os
 from gtts import gTTS
+
 # Record Audio
 r = sr.Recognizer()
 record_time = time.time()

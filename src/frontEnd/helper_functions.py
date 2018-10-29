@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 """ These functions are used to convert the photo taken on the pi into base64
 and send to our API at https://6ulp.com/predict which sends to Google to analyze
 and return a confidence score associated with a person's name """
@@ -5,6 +7,7 @@ and return a confidence score associated with a person's name """
 # Import libraries
 import base64
 import requests
+from time import sleep, time
 
 
 def convert_photo(link):
@@ -28,9 +31,12 @@ def send_image(image_base64):
     except requests.exceptions.RequestException as e:
         print(e)
 
+    with open('/home/pi/Desktop/somefile.txt', 'w') as the_file:
+        the_file.write(r.text)
     print(r.text)
 
 
 # Dummy code to illustrate how it works
 # image = convert_photo("/Users/Rozanitis/Desktop/pics/person1540333080.335325.jpg")
-# send_image(image)
+image = convert_photo("/home/pi/Desktop/pic_box/person1540333080.335325.jpg")
+send_image(image)

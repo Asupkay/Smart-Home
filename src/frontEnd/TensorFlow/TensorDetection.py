@@ -69,8 +69,8 @@ def tensor_script():
     start_time2 = time.time()
 
     #read every pic in the folder
-    for img in os.listdir('/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/test'):
-        cap = cv2.VideoCapture('/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/test/' + img)
+    for img in os.listdir('/home/pi/Desktop/pic_box/'):
+        cap = cv2.VideoCapture('/home/pi/Desktop/pic_box/' + img)
     #cap = cv2.VideoCapture('/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/picture1539734811.83.jpg')
         # counter = 0
         # frameskip = 20

@@ -17,7 +17,7 @@ try:
             last_recorded_capture = datetime.datetime.now()
             print(last_recorded_capture)
             # cm.take_picture()
-            subprocess.Popen("ssh pi@<static ip> 'python camera.py'", shell=True)
+            subprocess.Popen("ssh pi@155.246.219.87 'python /home/pi/Desktop/camera.py'", shell=True)
             print("Motion Detected - Picture Taken")
             print(datetime.datetime.now())
             delta_value = (datetime.datetime.now() - last_recorded_capture)

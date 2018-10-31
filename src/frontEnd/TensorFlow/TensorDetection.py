@@ -60,8 +60,7 @@ class DetectorAPI:
         self.default_graph.close()
 
 
-if __name__ == "__main__":
-
+def tensor_script():
     #4seconds per img
     model_path = '/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/faster_rcnn_inception_v2_coco_2018_01_28/frozen_inference_graph.pb'
     #model_path = '/Users/franklin/SSW690/Smart-Home/src/frontEnd/TensorFlow/faster_rcnn_nas_coco_2018_01_28/frozen_inference_graph.pb'
@@ -94,7 +93,9 @@ if __name__ == "__main__":
                         cropImg = img[box[0]: box[2], box[1]: box[3]]
                         cv2.rectangle(img,(box[1],box[0]),(box[3],box[2]),(255,0,0),2)
                         # save image in the box.
-                        cv2.imwrite(os.curdir + '/box/' + 'person' + str(time.time()) + '.jpg', cropImg)
+                        capture = os.curdir + '/box/' + 'person' + str(time.time()) + '.jpg'
+                        cv2.imwrite(capture, cropImg)
+                        return capture
                 cv2.imshow("preview", img)
 
                 key = cv2.waitKey(1)

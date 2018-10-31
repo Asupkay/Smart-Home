@@ -9,5 +9,5 @@ inotifywait -m -r -e create "$DIR" | while read f
 
 do
     echo monkey
-    python helper_functions.py
+    python server.py
 done

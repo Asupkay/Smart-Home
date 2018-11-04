@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import NavBar from './components/navBar';
+import ActivityLog from './components/activityLog';
 import './App.css';
 
 class App extends Component {
   state = {
-    navBarTitle: "Activity Log"
+    navBarTitle: "Activity Log",
+    activities: [{label: "Alex_Sup", confidence: .80 }, {label: "John_Banya", confidence: .60}, {label: "Ruthy_Levi", confidence: .20}]
   };
 
 
@@ -12,11 +14,7 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar title = { this.state.navBarTitle }/>
-        <header className="App-header">
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-        </header>
+        <ActivityLog activities = { this.state.activities}/>
       </div>
     );
   }

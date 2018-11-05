@@ -3,11 +3,7 @@ import React from 'react';
 const Dashboard = (props) => {
 
   return (
-    <nav className="navbar navbar-dark bg-dark">
-      <a className="navbar-brand" href="/">
-        <p style={{display: 'inline'}}>{ props.title }</p>
-      </a>
-    </nav>
+    <p>Login and then two buttons to navigate to preferences and activity log here</p>
   )
 }
 

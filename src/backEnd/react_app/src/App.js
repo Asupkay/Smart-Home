@@ -8,13 +8,7 @@ import Dashboard from './components/dashboard';
 import NoMatch from './components/noMatch';
 
 class App extends Component {
-  state = {
-    navBarTitle: "Activity Log",
-    
-  };
-
   getTitle = (path) => {
-    console.log(path);
     const pathToTitle = {
       '/activitylog': 'Activity Log',
       '/preferences': 'Preferences',

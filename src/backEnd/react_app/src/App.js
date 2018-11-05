@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import './App.css';
 import NavBar from './components/navBar';
 import ActivityLog from './components/activityLog';
-import './App.css';
+import Preferences from './components/preferences';
+import Dashboard from './components/dashboard';
+import NoMatch from './components/noMatch';
 
 class App extends Component {
   state = {
     navBarTitle: "Activity Log",
-    activities: [{label: "Alex_Sup", confidence: .80 }, {label: "John_Banya", confidence: .60}, {label: "Ruthy_Levi", confidence: .20}]
+    
   };
 
 
@@ -14,7 +18,12 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar title = { this.state.navBarTitle }/>
-        <ActivityLog activities = { this.state.activities}/>
+        <Switch>
+          <Route path='/activitylog' component={ ActivityLog } />
+          <Route path='/preferences' component={ Preferences } />
+          <Route exact path='/' component={ Dashboard } />
+          <Route component={ NoMatch } />
+        </Switch>
       </div>
     );
   }

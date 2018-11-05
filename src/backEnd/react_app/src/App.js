@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/navBar';
 import ActivityLog from './components/activityLog';
@@ -13,11 +13,23 @@ class App extends Component {
     
   };
 
+  getTitle = (path) => {
+    console.log(path);
+    const pathToTitle = {
+      '/activitylog': 'Activity Log',
+      '/preferences': 'Preferences',
+      '/': 'Dashboard'
+    };
+    if(pathToTitle[path] === undefined) {
+      return '404';
+    }  
+    return pathToTitle[path];
+  }
 
   render() {
     return (
       <div className="App">
-        <NavBar title = { this.state.navBarTitle }/>
+        <NavBar title = { this.getTitle(this.props.location.pathname) }/>
         <Switch>
           <Route path='/activitylog' component={ ActivityLog } />
           <Route path='/preferences' component={ Preferences } />
@@ -29,4 +41,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);

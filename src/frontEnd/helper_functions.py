@@ -39,13 +39,13 @@ def send_image(image_base64):
     print(r.text)
 
 
-def put_to_server(local_path, remote_path):
+def put_to_server(local_path, remote_path, server, username, password):
     """ Using the paramiko library, send an image from a local directory to
     a remote directory through an SSH connection """
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
-        ssh.connect('server', username='username', password='password')
+        ssh.connect(server, username=username, password=password)
     except paramiko.SSHException:
         print("Connection Failed")
         quit()

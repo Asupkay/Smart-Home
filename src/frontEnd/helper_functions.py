@@ -7,6 +7,8 @@ and return a confidence score associated with a person's name """
 # Import libraries
 import base64
 import requests
+import paramiko
+import os
 from time import sleep, time
 
 
@@ -18,6 +20,7 @@ def convert_photo(link):
     image_base64 = base64.b64encode(image_read)
 
     return image_base64
+
 
 def send_image(image_base64):
     """ Using the requests library, send the base64 image in a JSON object
@@ -36,7 +39,25 @@ def send_image(image_base64):
     print(r.text)
 
 
+def put_to_server(local_path, remote_path):
+    """ Using the paramiko library, send an image from a local directory to
+    a remote directory through an SSH connection """
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    try:
+        ssh.connect('server', username='username', password='password')
+    except paramiko.SSHException:
+        print("Connection Failed")
+        quit()
+
+    ftp_client = ssh.open_sftp()
+    ftp_client.put(local_path, remote_path)
+    ftp_client.close()
+    ssh.close()
+
 # Dummy code to illustrate how it works
 # image = convert_photo("/Users/Rozanitis/Desktop/pics/person1540333080.335325.jpg")
-image = convert_photo("/home/pi/Desktop/pic_box/person1540333080.335325.jpg")
-send_image(image)
+# image = convert_photo("/home/pi/Desktop/pic_box/person1540333080.335325.jpg")
+# send_image(image)
+
+# put_to_server("/Users/Rozanitis/Desktop/pics/person1540333080.33604.jpg", "/home/krozanit/Desktop/dir/person1540333080.33604.jpg")

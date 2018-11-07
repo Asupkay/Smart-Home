@@ -23,7 +23,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavBar title = { this.getTitle(this.props.location.pathname) }/>
+        <NavBar title = { this.getTitle(this.props.location.pathname) } history = { this.props.history }/>
         <Switch>
           <Route path='/activitylog' component={ ActivityLog } />
           <Route path='/preferences' component={ Preferences } />

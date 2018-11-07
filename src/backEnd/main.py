@@ -9,18 +9,6 @@ import json
 
 app = Flask(__name__, static_folder = 'react_app/build')
 
-@app.route('/')
-def serve_static_index():
-    return send_from_directory('react_app/build/', 'index.html')
-
-@app.route('/static/<path:path>') # serve whatever the client requested in the static folder
-def serve_static(path):
-    return send_from_directory('react_app/build/static/', path)
-
-@app.route('/service-worker.js')
-def serve_worker():
-    return send_from_directory('react_app/build/', 'service-worker.js')
-
 # AutoML prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -51,6 +39,18 @@ def predict():
     #Post to the model and return the response
     response = requests.post('https://automl.googleapis.com/v1beta1/projects/engineering-capstone/locations/us-central1/models/ICN2044687123149108018:predict', json = {'payload': {'image': { 'imageBytes': str(base64)}}}, headers={'Authorization':'Bearer ' + signed_jwt.decode("utf-8")})
     return response.text;
+
+@app.route('/')
+def serve_static_index():
+    return send_from_directory('react_app/build/', 'index.html')
+
+@app.route('/static/<path:path>') # serve whatever the client requested in the static folder
+def serve_static(path):
+    return send_from_directory('react_app/build/static/', path)
+
+@app.route('/service-worker.js')
+def serve_worker():
+    return send_from_directory('react_app/build/', 'service-worker.js')
 
 if __name__ == "__main__":
     app.run()

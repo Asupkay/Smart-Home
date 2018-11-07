@@ -1,25 +1,38 @@
 import React, { Component } from 'react';
-import NavBar from './components/navBar';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import './App.css';
+import NavBar from './components/navBar';
+import ActivityLog from './components/activityLog';
+import Preferences from './components/preferences';
+import Dashboard from './components/dashboard';
+import NoMatch from './components/noMatch';
 
 class App extends Component {
-  state = {
-    navBarTitle: "Activity Log"
-  };
-
+  getTitle = (path) => {
+    const pathToTitle = {
+      '/activitylog': 'Activity Log',
+      '/preferences': 'Preferences',
+      '/': 'Dashboard'
+    };
+    if(pathToTitle[path] === undefined) {
+      return '404';
+    }  
+    return pathToTitle[path];
+  }
 
   render() {
     return (
       <div className="App">
-        <NavBar title = { this.state.navBarTitle }/>
-        <header className="App-header">
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-        </header>
+        <NavBar title = { this.getTitle(this.props.location.pathname) } history = { this.props.history }/>
+        <Switch>
+          <Route path='/activitylog' component={ ActivityLog } />
+          <Route path='/preferences' component={ Preferences } />
+          <Route exact path='/' component={ Dashboard } />
+          <Route component={ NoMatch } />
+        </Switch>
       </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

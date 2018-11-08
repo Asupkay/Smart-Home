@@ -59,7 +59,3 @@ def main(name):
             text_to_speech("I could not understand you.")
 
 main("Kipsy")
-
-#speaker identification
-#different voices DONE
-#cartoon animation speaking

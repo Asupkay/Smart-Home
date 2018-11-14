@@ -11,6 +11,7 @@ display webpages based on user's preferences. """
 import base64
 import requests
 import paramiko
+import os
 import subprocess
 import re
 from time import sleep, time
@@ -54,3 +55,21 @@ def parsejson(response):
     print(username)
 
     subprocess.Popen("ssh username@ipaddress DISPLAY=:1 python /Users/Rozanitis/Desktop/laptop1.py" + " " + username, shell=True)
+
+def put_to_server(local_path, remote_path, server, username, password):
+    """ Using the paramiko library, send an image from a local directory to
+    a remote directory through an SSH connection """
+
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    try:
+        ssh.connect(server, username=username, password=password)
+    except paramiko.SSHException:
+        print("Connection Failed")
+        quit()
+
+    ftp_client = ssh.open_sftp()
+    ftp_client.put(local_path, remote_path)
+    ftp_client.close()
+    ssh.close()
+    

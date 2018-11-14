@@ -6,13 +6,15 @@ import ActivityLog from './components/activityLog';
 import Preferences from './components/preferences';
 import Dashboard from './components/dashboard';
 import NoMatch from './components/noMatch';
+import SignIn from './components/SignIn';
 
 class App extends Component {
   getTitle = (path) => {
     const pathToTitle = {
       '/activitylog': 'Activity Log',
       '/preferences': 'Preferences',
-      '/': 'Dashboard'
+      '/': 'Dashboard',
+      '/signIn':'SignIn'
     };
     if(pathToTitle[path] === undefined) {
       return '404';
@@ -28,6 +30,7 @@ class App extends Component {
           <Route path='/activitylog' component={ ActivityLog } />
           <Route path='/preferences' component={ Preferences } />
           <Route exact path='/' component={ Dashboard } />
+          <Route path='/signIn' component={ SignIn } />
           <Route component={ NoMatch } />
         </Switch>
       </div>

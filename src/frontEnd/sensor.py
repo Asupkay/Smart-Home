@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 import time
 import datetime
-from picture import Camera
 import subprocess
 
 GPIO.setmode(GPIO.BCM)

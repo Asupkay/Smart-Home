@@ -1,5 +1,9 @@
 from flask import Flask, abort, jsonify, send_from_directory
 from flask import request
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+import datetime
 import requests
 import time
 import os
@@ -8,6 +12,12 @@ import sys
 import json
 
 app = Flask(__name__, static_folder = 'react_app/build')
+cred = credentials.ApplicationDefault();
+firebase_admin.initialize_app(cred, {
+    'projectId': 'engineering-capstone'
+})
+
+db = firestore.client()
 
 # AutoML prediction route
 @app.route('/predict', methods=['POST'])
@@ -38,7 +48,19 @@ def predict():
 
     #Post to the model and return the response
     response = requests.post('https://automl.googleapis.com/v1beta1/projects/engineering-capstone/locations/us-central1/models/ICN2044687123149108018:predict', json = {'payload': {'image': { 'imageBytes': str(base64)}}}, headers={'Authorization':'Bearer ' + signed_jwt.decode("utf-8")})
-    return response.text;
+    responseJson = response.json();
+    doc_ref = db.collection(u'activities').document(u'houseA')
+
+    doc = doc_ref.get()
+    activities = doc.to_dict()
+    print(activities)
+    if activities != None:
+        activitiesArray = activities.get('activities')
+        activitiesArray.append({'confidence': responseJson['payload'][0]['classification']['score'], 'label': responseJson['payload'][0]['displayName'], 'time': datetime.datetime.now()})
+        db.collection(u'activities').document('houseA').set({'activities': activitiesArray}) 
+    else:
+        db.collection(u'activities').document('houseA').set({'activities': [{'confidence': responseJson['payload'][0]['classification']['score'], 'label': responseJson['payload'][0]['displayName'], 'time': datetime.datetime.now()}]}) 
+    return response.text
 
 @app.route('/')
 def serve_static_index():

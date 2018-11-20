@@ -1,28 +1,49 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import fire from "../config/fire";
 
 class ActivityLog extends Component {
-    state = {
-      activities: [
-                  {
-                    time: '10/12/18 10:18', 
-                    label: "Alex_Sup", 
-                    confidence: .80 
-                  }, 
-                  {
-                    time: '10/12/18 10:18', 
-                    label: "John_Banya", 
-                    confidence: .60
-                  }, 
-                  {
-                    time: '10/12/18 10:17', 
-                    label: "Ruthy_Levi", 
-                    confidence: .20
-                  }
-                ]
-    };
+  state = {
+    activities: []
+  };
 
-  render() { 
+  componentDidMount(props) {
+    const db = fire.firestore();
+    const settings = { timestampsInSnapshots: true };
+    db.settings(settings);
+    const doc = db.collection("activities").doc("houseA");
+    const observer = doc.onSnapshot(
+      docSnapshot => {
+        console.log(
+          docSnapshot._document.data.internalValue.root.value.internalValue
+        );
+        this.setState({
+          activities: docSnapshot._document.data.internalValue.root.value.internalValue.sort(
+            (a, b) => {
+              return (
+                b.internalValue.root.right.value.internalValue.seconds -
+                a.internalValue.root.right.value.internalValue.seconds
+              );
+            }
+          )
+        });
+      },
+      err => {
+        console.log(`Encountered error: ${err}`);
+      }
+    );
+  }
+
+  render() {
     return (
+      <React.Fragment>{renderActivities(this.state.activities)}</React.Fragment>
+    );
+  }
+}
+
+const renderActivities = activities => {
+  if (activities.length === 0) return <p>No Activities</p>;
+  return (
+    <React.Fragment>
       <div className="container">
         <table className="table">
           <thead>
@@ -34,23 +55,27 @@ class ActivityLog extends Component {
             </tr>
           </thead>
           <tbody>
-            { renderActivities(this.state.activities) }
+            {activities.map((activity, index) => (
+              <tr key={index}>
+                <th scope="row">{index}</th>
+                <td>
+                  {new Date(
+                    activity.internalValue.root.right.value.internalValue.seconds
+                  ).toLocaleString()}
+                </td>
+                <td>
+                  {activity.internalValue.root.value.internalValue
+                    .split("_")
+                    .join(" ")}
+                </td>
+                <td>{activity.internalValue.root.left.value.internalValue}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-    );
-  }
-}
-
-const renderActivities = (activities) => {
-  if(activities.length === 0) return <p>No Activities</p>
-  return <React.Fragment>{ activities.map((activity, index) => <tr key = {index}>
-      <th scope="row">{ index }</th>
-      <td>{activity.time}</td>
-      <td>{activity.label}</td>
-      <td>{activity.confidence}</td>
-    </tr>) }
-  </React.Fragment>
-}
+    </React.Fragment>
+  );
+};
 
 export default ActivityLog;

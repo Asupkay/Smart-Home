@@ -3,8 +3,75 @@
 import pyttsx3
 import webbrowser
 import speech_recognition as sr
+import os
+from winreg import HKEY_CURRENT_USER, OpenKey, QueryValue
+import time
 
-# preferences = {"Kipsy": [6, "Playing In-A-Gadda-Da-Vida and displaying weather.", [inagaddadavida(), weather()]]}
+flag = 0
+count = 0
+
+def get_default_browser():
+    with OpenKey(HKEY_CURRENT_USER, r"Software\Classes\http\shell\open\command") as key:
+        return QueryValue(key, None)
+
+def greet_user(final_name, conf):
+    if conf >= .9:
+        text_to_speech("Welcome, " + final_name + "!")
+        return final_name
+    elif conf < .9 and conf >= .7:
+        final_name = check_name(final_name)
+        return final_name
+    elif conf < .7:
+        text_to_speech("I could not recognize you through the camera!")
+        final_name = check_name("Unknown")
+        return final_name
+
+def check_name(name):
+    global count
+    if name == "Unknown":
+        name = new_name()
+    r = sr.Recognizer()
+    mic = sr.Microphone(device_index=1)
+    while True:
+        with mic as source:
+            r.adjust_for_ambient_noise(source, duration=2)
+            text_to_speech(name + ", is that you?")
+            audio = r.listen(source)
+            try:
+                text = r.recognize_google(audio)
+                text_to_speech("You said " + text)
+                if "yes" in text or "yea" in text or "yup" in text:
+                    final_name = name
+                    text_to_speech("At last! Welcome, " + final_name + "!")
+                    return final_name
+                else:
+                    # text_to_speech("I must have gotten you confused!")
+                    count += 1
+                    if count >= 3:
+                        final_name = "Guest"
+                        text_to_speech("I'm sick of all this back and forth. Please ask the homeowner to add you as a new user.")
+                        text_to_speech("Welcome, " + final_name + "!")
+                        return final_name
+                    else:
+                        name = new_name()
+            except sr.UnknownValueError:
+                text_to_speech("I could not understand you.")
+
+def new_name():
+    r = sr.Recognizer()
+    mic = sr.Microphone(device_index=1)
+    while True:
+        with mic as source:
+            r.adjust_for_ambient_noise(source, duration=2)
+            text_to_speech("What is your first name?")
+            audio = r.listen(source)
+            try:
+                text = r.recognize_google(audio)
+                text_to_speech("You said " + text)
+                final_name = text
+                return final_name
+            except sr.UnknownValueError:
+                text_to_speech("I could not understand you.")
 
 def audio_file_to_text():
     r = sr.Recognizer()
@@ -26,13 +93,29 @@ def text_to_speech(text):
     engine.runAndWait()
 
 def weather():
-    webbrowser.open('https://weather.com/')
+    global flag
+    if flag == 0:
+        webbrowser.open('https://weather.com/weather/today/l/USNJ0221:1:US')
+    else:
+        webbrowser.open_new_tab('https://weather.com/weather/today/l/USNJ0221:1:US')
+    flag += 1
 
 def inagaddadavida():
-    webbrowser.open('https://www.youtube.com/watch?v=UIVe-rZBcm4')
+    global flag
+    if flag == 0:
+        webbrowser.open('https://www.youtube.com/watch?v=UIVe-rZBcm4')
+    else:
+        webbrowser.open_new_tab('https://www.youtube.com/watch?v=UIVe-rZBcm4')
+    flag += 1
 
-def main(name):
-    text_to_speech("Welcome, " + name + "!")
+def main(user_list):
+    name = user_list[0]
+    conf = user_list[1]
+    text_to_speech("Evee starting up...")
+    print("Please pause for 2 seconds every time before speaking to me. I'm still learning the human language!")
+    time.sleep(4)
+    final_name = name.split('_', 1)[0]
+    final_name = greet_user(final_name, conf)
     r = sr.Recognizer()
     mic = sr.Microphone(device_index=1)
     while True:
@@ -44,12 +127,15 @@ def main(name):
             text = r.recognize_google(audio)
             text_to_speech("You said " + text)
             if "bye" in text:
-                text_to_speech("Goodbye, " + name + "! Shutting down.")
+                text_to_speech("Goodbye, " + final_name + "! Shutting down.")
+                # if default == "\"C:\Program Files (x86)\Mozilla Firefox\firefox.exe\" -osint -url \"%1\"":
+                    # print("good")
+                os.system('taskkill /im firefox.exe')
                 break
             if "weather" in text:
                 weather()
                 text_to_speech("Here's the weather.")
-            if "In-A-Gadda-Da-Vida" in text or "inagodadavida" in text:
+            if "In-A-Gadda-Da-Vida" in text or "inagodadavida" in text or "In A Gadda Da Vida" in text:
                 inagaddadavida()
                 text_to_speech("Playing Professor Rowland's favorite song.")
             if "hello" in text or "hi" in text:
@@ -58,4 +144,4 @@ def main(name):
         except sr.UnknownValueError:
             text_to_speech("I could not understand you.")
 
-main("Kipsy")
+main(["Kipsy_Quevada", .95])

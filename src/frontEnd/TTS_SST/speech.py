@@ -4,15 +4,17 @@ import pyttsx3
 import webbrowser
 import speech_recognition as sr
 import os
-from winreg import HKEY_CURRENT_USER, OpenKey, QueryValue
+# NEXT LINE NOT IN USE ANYMORE
+# from winreg import HKEY_CURRENT_USER, OpenKey, QueryValue
 import time
 
 flag = 0
 count = 0
 
-def get_default_browser():
-    with OpenKey(HKEY_CURRENT_USER, r"Software\Classes\http\shell\open\command") as key:
-        return QueryValue(key, None)
+# NEXT 3 LINES NOT IN USE ANYMORE
+# def get_default_browser():
+#     with OpenKey(HKEY_CURRENT_USER, r"Software\Classes\http\shell\open\command") as key:
+#         return QueryValue(key, None)
 
 def greet_user(final_name, conf):
     if conf >= .9:
@@ -31,7 +33,7 @@ def check_name(name):
     if name == "Unknown":
         name = new_name()
     r = sr.Recognizer()
-    mic = sr.Microphone(device_index=1)
+    mic = sr.Microphone(device_index=2)
     while True:
         with mic as source:
             r.adjust_for_ambient_noise(source, duration=2)
@@ -59,7 +61,7 @@ def check_name(name):
 
 def new_name():
     r = sr.Recognizer()
-    mic = sr.Microphone(device_index=1)
+    mic = sr.Microphone(device_index=2)
     while True:
         with mic as source:
             r.adjust_for_ambient_noise(source, duration=2)
@@ -95,17 +97,25 @@ def text_to_speech(text):
 def weather():
     global flag
     if flag == 0:
-        webbrowser.open('https://weather.com/weather/today/l/USNJ0221:1:US')
+        webbrowser.get('firefox').open('https://weather.com/weather/today/l/USNJ0221:1:US')
     else:
-        webbrowser.open_new_tab('https://weather.com/weather/today/l/USNJ0221:1:US')
+        webbrowser.get('firefox').open_new_tab('https://weather.com/weather/today/l/USNJ0221:1:US')
     flag += 1
 
 def inagaddadavida():
     global flag
     if flag == 0:
-        webbrowser.open('https://www.youtube.com/watch?v=UIVe-rZBcm4')
+        webbrowser.get('firefox').open('https://www.youtube.com/watch?v=UIVe-rZBcm4')
     else:
-        webbrowser.open_new_tab('https://www.youtube.com/watch?v=UIVe-rZBcm4')
+        webbrowser.get('firefox').open_new_tab('https://www.youtube.com/watch?v=UIVe-rZBcm4')
+    flag += 1
+
+def netflix():
+    global flag
+    if flag == 0:
+        webbrowser.get('firefox').open("https://www.netflix.com/watch/80080569?trackId=14170056&tctx=1%2C1%2C067b8cb5-8757-4638-a78f-7a6788dbd38e-106751798%2C670d5369-7ebb-4c22-9fd3-f6b9194d2187_8585115X10XX1543276222186%2C670d5369-7ebb-4c22-9fd3-f6b9194d2187_ROOT")
+    else:
+        webbrowser.get('firefox').open_new_tab("https://www.netflix.com/watch/80080569?trackId=14170056&tctx=1%2C1%2C067b8cb5-8757-4638-a78f-7a6788dbd38e-106751798%2C670d5369-7ebb-4c22-9fd3-f6b9194d2187_8585115X10XX1543276222186%2C670d5369-7ebb-4c22-9fd3-f6b9194d2187_ROOT")
     flag += 1
 
 def main(user_list):
@@ -117,7 +127,7 @@ def main(user_list):
     final_name = name.split('_', 1)[0]
     final_name = greet_user(final_name, conf)
     r = sr.Recognizer()
-    mic = sr.Microphone(device_index=1)
+    mic = sr.Microphone(device_index=2)
     while True:
         with mic as source:
             r.adjust_for_ambient_noise(source, duration=2)
@@ -130,7 +140,7 @@ def main(user_list):
                 text_to_speech("Goodbye, " + final_name + "! Shutting down.")
                 # if default == "\"C:\Program Files (x86)\Mozilla Firefox\firefox.exe\" -osint -url \"%1\"":
                     # print("good")
-                os.system('taskkill /im firefox.exe')
+                os.system('pkill -f firefox')
                 break
             if "weather" in text:
                 weather()
@@ -140,6 +150,9 @@ def main(user_list):
                 text_to_speech("Playing Professor Rowland's favorite song.")
             if "hello" in text or "hi" in text:
                 text_to_speech("Hello! Nice to see you again.")
+            if "netflix" in text or "Netflix" in text:
+                netflix()
+                text_to_speech("Playing most recently watched show.")
 
         except sr.UnknownValueError:
             text_to_speech("I could not understand you.")

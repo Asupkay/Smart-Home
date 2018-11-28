@@ -60,7 +60,7 @@ const renderActivities = activities => {
                 <th scope="row">{index}</th>
                 <td>
                   {new Date(
-                    activity.internalValue.root.right.value.internalValue.seconds
+                    activity.internalValue.root.right.value.internalValue.seconds*1000
                   ).toLocaleString()}
                 </td>
                 <td>

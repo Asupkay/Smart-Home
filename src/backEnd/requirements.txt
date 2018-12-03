@@ -3,3 +3,4 @@ requests
 PyJWT
 cryptography
 firebase-admin
+google-cloud-firestore

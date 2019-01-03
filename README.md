@@ -1,7 +1,7 @@
 # Smart Home
 ## Introduction
 
-Our team believes that there is an untapped market for smart home technology which utilizes machine learning. Therefore, over the course of this semester, our team will be designing and building a proof of concept for a smart home application that will offer users fundamental security and lifestyle features that will make their lives easier. Our initial target customer base are homeowners, but eventually could expand to businesses as well, since one of our basic features is understanding who has entered the building or room and identifying how the system should respond.
+Our team believes that there is an untapped market for smart home technology which utilizes machine learning. Therefore, over the course of this semester (Fall 2018), our team will be designing and building a proof of concept for a smart home application that will offer users fundamental security and lifestyle features that will make their lives easier. Our initial target customer base are homeowners, but eventually could expand to businesses as well, since one of our basic features is understanding who has entered the building or room and identifying how the system should respond.
 
 ## Roles and Responsibilities
 * Frontend Team

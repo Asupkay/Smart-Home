@@ -1,0 +1,4 @@
+runtime: python37
+env_variables:
+    PRIVATE_KEY_FROM_JSON: "YOUR KEY HERE"
+    PRIVATE_KEY_ID_FROM_JSON: "YOUR KEY ID HERE"

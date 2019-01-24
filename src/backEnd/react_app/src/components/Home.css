@@ -1,0 +1,8 @@
+.Home {
+  min-height: 100%;
+  min-height: 100vh;
+  display: flex;
+  background-size: cover;
+  align-items: center;
+  justify-content: center;
+}

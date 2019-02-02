@@ -1,3 +1,10 @@
+*.mp4
+*.avi
+*.h264
+*.pyc
+
+=======
+
 app.yaml
 .env
 serviceAccountKey.json
